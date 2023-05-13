@@ -36,3 +36,6 @@ security:
   jwt:
     token:
       key: secret
+
+jwt:
+  secret: secret

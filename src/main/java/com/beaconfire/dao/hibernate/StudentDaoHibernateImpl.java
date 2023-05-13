@@ -76,4 +76,26 @@ public class StudentDaoHibernateImpl implements StudentDao {
             return student;
         }
     }
+
+    @Override
+    public StudentHibernate getStudentByEmail2(String email) {
+        try (Session session = sessionFactory.openSession()) {
+            // Get CriteriaBuilder instance from the session
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+
+            // Create a CriteriaQuery for Student class
+            CriteriaQuery<StudentHibernate> cq = cb.createQuery(StudentHibernate.class);
+            Root<StudentHibernate> studentRoot = cq.from(StudentHibernate.class);
+
+            // Set the condition for the email
+            cq.where(cb.equal(studentRoot.get("email"), email));
+
+            // Create a query, execute it and return the result
+            Query<StudentHibernate> query = session.createQuery(cq);
+
+            StudentHibernate tmp = query.uniqueResult();
+
+            return tmp;
+        }
+    }
 }

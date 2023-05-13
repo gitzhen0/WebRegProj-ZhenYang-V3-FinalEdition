@@ -165,7 +165,8 @@ VALUES ('Ashley', 'Lin', 'alice.wang@example.com', 'c4ca4238a0b923820dcc509a6f75
        ('Admin', 'One', 'admin@1', 'c4ca4238a0b923820dcc509a6f75849b', 1, 1, 1),
        ('Admin', 'Two', 'admin@2', 'c4ca4238a0b923820dcc509a6f75849b', 1, 1, 1),
        ('Student', 'One', 'student@1', 'c4ca4238a0b923820dcc509a6f75849b', 1, 1, 0),
-       ('Student', 'Two', 'student@2', 'c4ca4238a0b923820dcc509a6f75849b', 1, 1, 0);
+       ('Student', 'Two', 'student@2', 'c4ca4238a0b923820dcc509a6f75849b', 1, 1, 0),
+       ('test', 'test', '1@1', '$2a$10$qmrYU5DiLUOdgQvhKoER4eetJINPyr2aDLXh7KiKXnP1FV6Arfgz2', 1, 1, 0);
 
 -- Insert fake data into StudentClass
 INSERT INTO StudentClass (student_id, class_id, status)
