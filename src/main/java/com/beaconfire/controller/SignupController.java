@@ -1,26 +1,33 @@
 package com.beaconfire.controller;
 
+import com.beaconfire.domain.DTO.GeneralResponse;
+import com.beaconfire.domain.DTO.SignupRequest;
 import com.beaconfire.domain.jdbc.Department;
+import com.beaconfire.security.JwtUtil;
 import com.beaconfire.service.DepartmentService;
 import com.beaconfire.service.StudentService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpSession;
+
+import java.net.URI;
 import java.util.List;
 
 @Controller
 @RequestMapping("/signup")
+@RequiredArgsConstructor
 public class SignupController {
 
     private final StudentService studentService;
     private final DepartmentService departmentService;
 
-    public SignupController(StudentService studentService, DepartmentService departmentService) {
-        this.studentService = studentService;
-        this.departmentService = departmentService;
-    }
+    private final JwtUtil jwtUtil;
 
     @GetMapping()
     public String getRegistrationPage(Model model){
@@ -30,15 +37,18 @@ public class SignupController {
     }
 
     @PostMapping()
-    public String processSignup(@RequestParam("email") String email,
-                                @RequestParam("password") String password,
-                                @RequestParam("first_name") String first_name,
-                                @RequestParam("last_name") String last_name,
-                                @RequestParam("department_id") int department_id,
-                                HttpSession session,
-                                Model model) {
+    public ResponseEntity<GeneralResponse> processSignup(@RequestBody SignupRequest sur) {
+        Integer id= studentService.registerStudent(sur.getFirst_name(), sur.getLast_name(), sur.getEmail(), sur.getPassword(), sur.getDepartment_id(), 1, 0);
 
-        String StudentHomePage = studentService.registerStudent(first_name, last_name, email, password, department_id, 1, 0, session);
-        return StudentHomePage;
+        if (id < 0) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new GeneralResponse<String>(GeneralResponse.Status.FAILED, "potentially duplicated email", "")); // return conflict status if signup fails
+        }
+
+        final UserDetails userDetails = studentService.loadUserByUsername(sur.getEmail());
+        final String jwt = jwtUtil.generateToken(userDetails);
+
+        System.out.println("after id");
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/signup").toUriString());
+        return ResponseEntity.created(uri).header("Authorization", "Bearer " + jwt).body(new GeneralResponse(GeneralResponse.Status.SUCCESS, "Signup Success", id));
     }
 }

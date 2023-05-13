@@ -3,6 +3,8 @@ package com.beaconfire;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 //import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -16,5 +18,11 @@ public class WebRegApplication {
     @Bean
     public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
         return new HiddenHttpMethodFilter();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+//        BCryptPasswordEncoder tmp = new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder();
     }
 }
