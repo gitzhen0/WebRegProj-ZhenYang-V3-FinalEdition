@@ -1,4 +1,4 @@
-
+use WebRegDB;
 -- drop all tables, don't uncomment this!
 -- DROP TABLE IF EXISTS Application;
 -- DROP TABLE IF EXISTS StudentClass;
