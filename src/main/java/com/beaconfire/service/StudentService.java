@@ -73,4 +73,8 @@ public class StudentService implements UserDetailsService {
         return new User(student.getEmail(), student.getPassword(),
                 student.getIs_admin() == 1 ? AuthorityUtils.createAuthorityList("ADMIN") : AuthorityUtils.createAuthorityList("STUDENT"));
     }
+
+    public StudentHibernate getStudentByEmail2(String email){
+        return studentDao.getStudentByEmail2(email);
+    }
 }

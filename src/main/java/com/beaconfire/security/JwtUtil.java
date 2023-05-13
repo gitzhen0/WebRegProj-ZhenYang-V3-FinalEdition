@@ -1,8 +1,11 @@
 package com.beaconfire.security;
 
+import com.beaconfire.domain.hibernate.StudentHibernate;
+import com.beaconfire.service.StudentService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,9 @@ public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String secret;
+
+    @Autowired
+    private StudentService studentService;
 
     // retrieve username from jwt token
     public String extractUsername(String token) {
@@ -45,6 +51,9 @@ public class JwtUtil {
     // generate token for user
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        StudentHibernate student = studentService.getStudentByEmail2(userDetails.getUsername());
+        claims.put("is_admin", student.getIs_admin());
+        claims.put("id", student.getId());
         return createToken(claims, userDetails.getUsername());
     }
 
