@@ -1,0 +1,38 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: WebReg Course Management Web Application Zhen Yang
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath*:schema.sql
+      data-locations: classpath*:data.sql
+database:
+  jdbc:
+    driver: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/WebRegDB?useSSL=false
+    username: root
+    password: root
+  hibernate:
+    url: jdbc:mysql://localhost:3306/WebRegDB
+    driver: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    dialect: org.hibernate.dialect.MySQLDialect
+    showsql: true
+banner: classpath:banner.txt
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+security:
+  jwt:
+    token:
+      key: secret
