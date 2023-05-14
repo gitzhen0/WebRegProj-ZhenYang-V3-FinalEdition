@@ -10,9 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -71,7 +75,15 @@ public class AdminCourseController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> addNewCourse(@RequestBody AdminAddCourse input){
+    public ResponseEntity<?> addNewCourse(@Valid @RequestBody AdminAddCourse input, BindingResult bindingResult){
+
+        if (bindingResult.hasErrors()) {
+            List<String> errorStrings = new ArrayList<>();
+            for(FieldError e: bindingResult.getFieldErrors()){
+                errorStrings.add("ValidationError in " + e.getObjectName() + ": " + e.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest().body(new GeneralResponse<List<String>>(GeneralResponse.Status.FAILED, "RequestBody Field Error", errorStrings));
+        }
 
         if(!departmentService.departmentExistsById(input.getDepartment_id())){
             return ResponseEntity.badRequest().body(new GeneralResponse<>(GeneralResponse.Status.FAILED, "Department does not exists", null));
