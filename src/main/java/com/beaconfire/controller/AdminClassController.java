@@ -10,9 +10,13 @@ import com.beaconfire.service.AdminClassDisplayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -34,7 +38,17 @@ public class AdminClassController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> createClass(@RequestBody AdminAddClass input) {
+    public ResponseEntity<?> createClass(@Valid @RequestBody AdminAddClass input, BindingResult bindingResult) {
+
+
+        if (bindingResult.hasErrors()) {
+            List<String> errorStrings = new ArrayList<>();
+            for(FieldError e: bindingResult.getFieldErrors()){
+                errorStrings.add("ValidationError in " + e.getObjectName() + ": " + e.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest().body(new GeneralResponse<List<String>>(GeneralResponse.Status.FAILED, "RequestBody Field Error", errorStrings));
+        }
+
 
         if(!adminClassDisplayService.courseExistsById(input.getCourse_id())){
             return ResponseEntity.ok().body(new GeneralResponse<>(GeneralResponse.Status.FAILED, "course id doesn't exists", null));

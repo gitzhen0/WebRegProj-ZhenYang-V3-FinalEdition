@@ -3,6 +3,7 @@ package com.beaconfire.security;
 import com.beaconfire.domain.hibernate.StudentHibernate;
 import com.beaconfire.service.StudentService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,10 @@ public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String secret;
+
+    @Value("${token.neverExpire}")
+    private boolean tokenNeverExpire;
+
 
     @Autowired
     private StudentService studentService;
@@ -58,18 +63,25 @@ public class JwtUtil {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         StudentHibernate student = studentService.getStudentByEmail2(userDetails.getUsername());
-        claims.put("is_admin", student.getIs_admin());
+//        claims.put("is_admin", student.getIs_admin()); don't need to put is_admin field in jwt token
         claims.put("id", student.getId());
         return createToken(claims, userDetails.getUsername());
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
+        JwtBuilder jwtBuilder = Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .signWith(SignatureAlgorithm.HS256, secret);
 
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 200 ))  // Set the JWT expiration. Here it is set to 200 hours.
-//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10 ))  // Set the JWT expiration. Here it is set to 10 hours.
-                .signWith(SignatureAlgorithm.HS256, secret).compact();
+        if (!tokenNeverExpire) {//if token do expire
+            jwtBuilder.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10 )); // Set to 10 hours if tokenNeverExpire is false
+        }
+
+        return jwtBuilder.compact();
     }
+
 
     // validate token
     public Boolean validateToken(String token, UserDetails userDetails) {
