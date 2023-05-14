@@ -14,24 +14,24 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @ComponentScan(basePackages = "com.beaconfire")
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("redirect:/login");
-    }
-    @Bean
-    public InternalResourceViewResolver viewResolver() {
-        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-        resolver.setPrefix("/WEB-INF/jsp/");
-        resolver.setSuffix(".jsp");
-        return resolver;
-    }
-
 //    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//
-//        registry.addResourceHandler("swagger-ui.html").addResourceLocations(
-//                "classpath:/META-INF/resources/");
-//        registry.addResourceHandler("/webjars/**").addResourceLocations(
-//                "classpath:/META-INF/resources/webjars/");
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        registry.addViewController("/").setViewName("redirect:/login");
 //    }
+//    @Bean
+//    public InternalResourceViewResolver viewResolver() {
+//        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+//        resolver.setPrefix("/WEB-INF/jsp/");
+//        resolver.setSuffix(".jsp");
+//        return resolver;
+//    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+        registry.addResourceHandler("swagger-ui.html").addResourceLocations(
+                "classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations(
+                "classpath:/META-INF/resources/webjars/");
+    }
 }

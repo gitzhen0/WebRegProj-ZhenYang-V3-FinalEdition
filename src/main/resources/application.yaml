@@ -26,6 +26,7 @@ database:
     showsql: false
 banner: classpath:banner.txt
 
+# this one is to enable all endpoints of actuator
 management:
   endpoints:
     web:
