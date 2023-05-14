@@ -3,16 +3,20 @@ package com.beaconfire.dao.hibernate;
 import com.beaconfire.dao.DAOinterface.AdminStudentDisplayDao;
 import com.beaconfire.domain.hibernate.StudentClassHibernate;
 import com.beaconfire.domain.hibernate.StudentHibernate;
+import com.beaconfire.domain.hibernate.WebRegClassHibernate;
 import com.beaconfire.domain.jdbc.AdminHomeDisplay;
 import com.beaconfire.domain.jdbc.StudentClassDisplay;
+import com.beaconfire.exception.CustomGeneralException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,18 +107,24 @@ public class AdminStudentDisplayDaoHibernateImpl implements AdminStudentDisplayD
     }
 
     @Override
-    public void flipStudentStatus(int studentId) {
+    public Boolean flipStudentStatus(int studentId, int status) {
+        int tmp = -1;
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
 
             StudentHibernate student = session.get(StudentHibernate.class, studentId);
             if (student != null) {
-                student.setIs_active(student.getIs_active() == 1 ? 0 : 1);
+                tmp = student.getIs_active();
+                student.setIs_active(status);
                 session.update(student);
             }
 
             transaction.commit();
         }
+        if(tmp == -1){
+            throw new CustomGeneralException("hibernate failed exception");
+        }
+        return tmp == status;
     }
 
 
@@ -150,5 +160,38 @@ public class AdminStudentDisplayDaoHibernateImpl implements AdminStudentDisplayD
             return student != null;
         }
     }
+
+    @Override
+    public Boolean classExistsById(Integer classId) {
+        try (Session session = sessionFactory.openSession()) {
+            WebRegClassHibernate webRegClass = session.get(WebRegClassHibernate.class, classId);
+            return webRegClass != null;
+        }
+    }
+
+    @Override
+    public Boolean isStudentEnrolledInClass(Integer studentId, Integer classId) {
+        try (Session session = sessionFactory.openSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<StudentClassHibernate> cq = cb.createQuery(StudentClassHibernate.class);
+            Root<StudentClassHibernate> enrollmentRoot = cq.from(StudentClassHibernate.class);
+
+            // Create predicates for studentId and classId
+            Predicate studentIdPredicate = cb.equal(enrollmentRoot.get("studentHibernate").get("id"), studentId);
+            Predicate classIdPredicate = cb.equal(enrollmentRoot.get("webRegClassHibernate").get("id"), classId);
+
+            // Combine predicates with logical AND
+            cq.where(cb.and(studentIdPredicate, classIdPredicate));
+
+            // Execute the query
+            Query<StudentClassHibernate> query = session.createQuery(cq);
+            List<StudentClassHibernate> enrollments = query.getResultList();
+
+            // Return true if the list is not empty (i.e., the student is enrolled in the class)
+            return !enrollments.isEmpty();
+        }
+    }
+
+
 
 }

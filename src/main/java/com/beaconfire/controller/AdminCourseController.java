@@ -1,10 +1,13 @@
 package com.beaconfire.controller;
 
 
+import com.beaconfire.domain.DTO.AdminAddCourse;
+import com.beaconfire.domain.DTO.GeneralResponse;
 import com.beaconfire.domain.jdbc.*;
 import com.beaconfire.service.AdminCourseService;
 import com.beaconfire.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -57,27 +60,25 @@ public class AdminCourseController {
 
 
     @GetMapping("/all")
-    public String getAllCourse(HttpSession session, Model model){
-        if(session.getAttribute("userId") == null || !session.getAttribute("is_admin").equals("1")){
-            return "redirect:/login";
-        }
+    public ResponseEntity<?> getAllCourse(){
         List<AdminCourseDisplay> adminCourseDisplayList = adminCourseService.getAdminCourseDisplays();
-        model.addAttribute("adminCourseDisplayList", adminCourseDisplayList);
-        return "adminCourse";
+
+        adminCourseDisplayList.stream().forEach(acdl -> {
+            acdl.setCourse_id(null);
+        });
+
+        return ResponseEntity.ok().body(new GeneralResponse<List<AdminCourseDisplay>>(GeneralResponse.Status.SUCCESS, "success message", adminCourseDisplayList));
     }
 
     @PostMapping()
-    public String addNewCourse(@RequestParam("course_name") String course_name,
-                               @RequestParam("course_code") String course_code,
-                               @RequestParam("description") String description,
-                               @RequestParam("department_id") int department_id,
-                               HttpSession session,
-                               Model model){
-        if(session.getAttribute("userId") == null || !session.getAttribute("is_admin").equals("1")){
-            return "redirect:/login";
+    public ResponseEntity<?> addNewCourse(@RequestBody AdminAddCourse input){
+
+        if(!departmentService.departmentExistsById(input.getDepartment_id())){
+            return ResponseEntity.badRequest().body(new GeneralResponse<>(GeneralResponse.Status.FAILED, "Department does not exists", null));
         }
-        adminCourseService.addNewCourse(course_name, course_code, department_id, description);
-        return "redirect:/admin/course/all";
+
+        adminCourseService.addNewCourse(input.getCourse_name(), input.getCourse_code(), input.getDepartment_id(), input.getDescription());
+        return ResponseEntity.ok().body(new GeneralResponse<AdminAddCourse>(GeneralResponse.Status.SUCCESS, "Add new course successfully", input));
     }
 
 

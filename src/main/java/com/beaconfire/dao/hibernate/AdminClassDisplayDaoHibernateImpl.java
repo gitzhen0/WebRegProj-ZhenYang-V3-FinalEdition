@@ -56,7 +56,7 @@ public class AdminClassDisplayDaoHibernateImpl implements AdminClassDisplayDao {
     }
 
     @Override
-    public int addNewClass(int course_id, int professor_id, int semester_id, int classroom_id, int capacity, String dayOfWeek, LocalTime startTime, LocalTime endTime) {
+    public int addNewClass(int course_id, int professor_id, int semester_id, int classroom_id, int capacity, Integer dayOfWeek, LocalTime startTime, LocalTime endTime) {
         System.out.println("trial2: add new class");
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
@@ -84,7 +84,7 @@ public class AdminClassDisplayDaoHibernateImpl implements AdminClassDisplayDao {
             // Create new Lecture instance and set properties
             LectureHibernate newLecture = new LectureHibernate();
             newLecture.setWebRegClassHibernate(newClass);
-            newLecture.setDay_of_the_week(Integer.valueOf(dayOfWeek)); //??????
+            newLecture.setDay_of_the_week(dayOfWeek);
             newLecture.setStart_time(startTime);
             newLecture.setEnd_time(endTime);
 
@@ -99,18 +99,52 @@ public class AdminClassDisplayDaoHibernateImpl implements AdminClassDisplayDao {
 
 
     @Override
-    public void flipClassStatus(int classId) {
+    public void flipClassStatus(int classId, int status) {
         System.out.println("trial2: flip class status");
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
             WebRegClassHibernate webRegClass = session.get(WebRegClassHibernate.class, classId);
             if (webRegClass != null) {
-                webRegClass.setIs_active(webRegClass.getIs_active() == 1 ? 0 : 1);
+                webRegClass.setIs_active(status);
                 session.update(webRegClass);
             }
-
             session.getTransaction().commit();
+        }
+    }
+
+
+
+
+    @Override
+    public Boolean courseExistsById(Integer id) {
+        try (Session session = sessionFactory.openSession()) {
+            CourseHibernate result = session.get(CourseHibernate.class, id);
+            return result != null;
+        }
+    }
+
+    @Override
+    public Boolean semesterExistsById(Integer id) {
+        try (Session session = sessionFactory.openSession()) {
+            SemesterHibernate result = session.get(SemesterHibernate.class, id);
+            return result != null;
+        }
+    }
+
+    @Override
+    public Boolean professorExistsById(Integer id) {
+        try (Session session = sessionFactory.openSession()) {
+            ProfessorHibernate result = session.get(ProfessorHibernate.class, id);
+            return result != null;
+        }
+    }
+
+    @Override
+    public Boolean classroomExistsById(Integer id) {
+        try (Session session = sessionFactory.openSession()) {
+            ClassroomHibernate result = session.get(ClassroomHibernate.class, id);
+            return result != null;
         }
     }
 }

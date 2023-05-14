@@ -23,7 +23,7 @@ database:
     username: root
     password: root
     dialect: org.hibernate.dialect.MySQLDialect
-    showsql: true
+    showsql: false
 banner: classpath:banner.txt
 
 management:

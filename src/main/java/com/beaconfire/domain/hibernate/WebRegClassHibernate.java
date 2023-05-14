@@ -18,30 +18,18 @@ public class WebRegClassHibernate {
         @Column(name = "id", unique = true, nullable = false)
         private Integer id;
 
-//        @Column(name = "course_id")
-//        private Integer course_id;
-
         @ManyToOne
         @JoinColumn(name = "course_id")
         private CourseHibernate courseHibernate;
 
 
-//        @Column(name = "semester_id")
-//        private Integer semester_id;
-
         @ManyToOne
         @JoinColumn(name = "semester_id")
         private SemesterHibernate semesterHibernate;
 
-//        @Column(name = "professor_id")
-//        private Integer professor_id;
-
         @ManyToOne
         @JoinColumn(name = "professor_id")
         private ProfessorHibernate professorHibernate;
-
-//        @Column(name = "classroom_id")
-//        private Integer classroom_id;
 
         @ManyToOne
         @JoinColumn(name = "classroom_id")

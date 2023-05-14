@@ -7,4 +7,6 @@ import java.util.List;
 public interface DepartmentDao {
 
     List<Department> getAllDepartments();
+
+    Boolean departmentExistsById(Integer id);
 }

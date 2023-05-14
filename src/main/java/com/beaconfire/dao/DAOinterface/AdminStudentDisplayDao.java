@@ -13,9 +13,13 @@ public interface AdminStudentDisplayDao {
 
     List<StudentClassDisplay> getStudentClassesByStudentId(int studentId);
 
-    void flipStudentStatus(int studentId);
+    Boolean flipStudentStatus(int studentId, int status);
 
     void changeStudentClassStatus(int studentId, int classId, String status);
 
     Boolean studentExistsById(Integer studentId);
+
+    Boolean classExistsById(Integer classId);
+
+    Boolean isStudentEnrolledInClass(Integer studentId, Integer classId);
 }

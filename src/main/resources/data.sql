@@ -201,5 +201,8 @@ VALUES (1, 2, '2023-01-15 12:00:00', 'add', 'approved', 'Welcome to the class!')
        (9, 3, '2023-01-19 13:30:00', 'add', 'approved', 'Welcome aboard!'),
        (10, 6, '2023-01-19 17:00:00', 'add', 'rejected', 'Class is full.'),
        (2, 5, '2023-01-19 17:00:00', 'withdraw', 'pending', 'test remove application id = 11.'),
-       (2, 10, '2023-01-19 17:00:00', 'add', 'pending', 'test remove application id = 12.');
+       (2, 10, '2023-01-19 17:00:00', 'add', 'pending', 'test remove application id = 12.'),
+       (2, 11, '2023-01-19 18:00:00', 'add', 'pending', 'test application ordering 18:00'),
+       (2, 12, '2023-01-19 19:00:00', 'add', 'pending', 'test application ordering 19:00'),
+       (2, 13, '2023-01-19 20:00:00', 'add', 'pending', 'test application ordering 20:00');
 

@@ -24,7 +24,6 @@ public class AdminStudentController {
     @GetMapping("/{student_id}")
     public ResponseEntity getStudentById(@PathVariable("student_id") int student_id){
 
-
         if(!adminStudentService.studentExistsById(student_id)){
             return ResponseEntity.badRequest().body(new GeneralResponse<>(GeneralResponse.Status.FAILED, "student with id: " + student_id +", doesn't exist", null));
         }
@@ -51,20 +50,64 @@ public class AdminStudentController {
     }
 
     @PatchMapping("/{student_id}/{is_active}")
-    public String changeStudentStatus(@PathVariable("student_id") int studentId, @PathVariable("is_active") String is_active, HttpSession session){
-        if(session.getAttribute("userId") == null || !session.getAttribute("is_admin").equals("1")){
-            return "redirect:/login";
+    public ResponseEntity<?> changeStudentStatus(@PathVariable("student_id") int studentId, @PathVariable("is_active") String is_active){
+        if(!adminStudentService.studentExistsById(studentId)){
+            return ResponseEntity.badRequest().body(new GeneralResponse<>(GeneralResponse.Status.FAILED, "student with id: " + studentId +", doesn't exist", null));
         }
-        adminStudentService.flipStudentStatus(studentId);
-        return "redirect:/admin/home";
+
+        if(is_active.equals("active")){
+            Boolean changed = adminStudentService.flipStudentStatus(studentId, 1);
+            if(changed){
+                return ResponseEntity.ok().body(new GeneralResponse<>(GeneralResponse.Status.SUCCESS, "Student is activated successfully", null));
+            }else{
+                return ResponseEntity.badRequest().body(new GeneralResponse<>(GeneralResponse.Status.FAILED, "Student is already ACTIVE, no need to activate again", null));
+            }
+        }else if(is_active.equals("inactive")){
+            Boolean changed = adminStudentService.flipStudentStatus(studentId, 0);
+            if(changed){
+                return ResponseEntity.ok().body(new GeneralResponse<>(GeneralResponse.Status.SUCCESS, "Student is deactivated successfully", null));
+            }else{
+                return ResponseEntity.badRequest().body(new GeneralResponse<>(GeneralResponse.Status.FAILED, "Student is already INACTIVE, no need to deactivate again", null));
+            }
+        }else{
+            return ResponseEntity.badRequest().body(new GeneralResponse<>(GeneralResponse.Status.FAILED, "please enter either 'active' or 'inactive' for the isActive field", null));
+        }
     }
 
-    @PatchMapping("/{student_id}/class/{class_id}")
-    public String changeStudentClassStatus(@PathVariable("student_id") int studentId, @PathVariable("class_id") int classId, @RequestParam("status") String status, HttpSession session){
-        if(session.getAttribute("userId") == null || !session.getAttribute("is_admin").equals("1")){
-            return "redirect:/login";
+    @PatchMapping("/{student_id}/class/{class_id}/pass")
+    public ResponseEntity<?> changeStudentClassStatusToPass(@PathVariable("student_id") int studentId, @PathVariable("class_id") int classId){
+        if (!adminStudentService.studentExistsById(studentId)) {
+            return ResponseEntity.badRequest().body(new GeneralResponse<>(GeneralResponse.Status.FAILED,"Student does not exists", null));
         }
-        adminStudentService.changeStudentClassStatus(studentId, classId, status);
-        return "redirect:/admin/student/" + studentId;
+
+        if(!adminStudentService.classExistsById(classId)){
+            return ResponseEntity.badRequest().body(new GeneralResponse<>(GeneralResponse.Status.FAILED,"Class does not exists", null));
+        }
+
+        if (!adminStudentService.isStudentEnrolledInClass(studentId, classId)) {
+            return ResponseEntity.badRequest().body(new GeneralResponse<>(GeneralResponse.Status.FAILED,"This student didn't enroll in this class", null));
+        }
+
+        adminStudentService.changeStudentClassStatus(studentId, classId, "pass");
+        return ResponseEntity.ok().body(new GeneralResponse<>(GeneralResponse.Status.SUCCESS, "StudentClass set to PASS successfully!", null));
+    }
+
+    @PatchMapping("/{student_id}/class/{class_id}/fail")
+    public ResponseEntity<?> changeStudentClassStatusToFail(@PathVariable("student_id") int studentId, @PathVariable("class_id") int classId){
+
+        if (!adminStudentService.studentExistsById(studentId)) {
+            return ResponseEntity.badRequest().body(new GeneralResponse<>(GeneralResponse.Status.FAILED,"Student does not exists", null));
+        }
+
+        if(!adminStudentService.classExistsById(classId)){
+            return ResponseEntity.badRequest().body(new GeneralResponse<>(GeneralResponse.Status.FAILED,"Class does not exists", null));
+        }
+
+        if (!adminStudentService.isStudentEnrolledInClass(studentId, classId)) {
+            return ResponseEntity.badRequest().body(new GeneralResponse<>(GeneralResponse.Status.FAILED,"This student didn't enroll in this class", null));
+        }
+
+        adminStudentService.changeStudentClassStatus(studentId, classId, "fail");
+        return ResponseEntity.ok().body(new GeneralResponse<>(GeneralResponse.Status.SUCCESS, "StudentClass set to FAIL successfully!", null));
     }
 }

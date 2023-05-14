@@ -68,7 +68,12 @@ public class AdminApplicationDaoHibernateImpl implements AdminApplicationDao {
 
     @Override
     public void updateApplicationStatus(Integer applicationId, String status, String description) {
-        System.out.println("88888 Hibernate: updateApplicationStatus");
+
+        if(status.equals("approve")){
+            status = "approved";
+        }else{
+            status = "rejected";
+        }
 
         Session session = null;
         Transaction tx = null;
@@ -105,7 +110,7 @@ public class AdminApplicationDaoHibernateImpl implements AdminApplicationDao {
 
     @Override
     public String getRequestByApplicationId(Integer applicationId) {
-        System.out.println("88888 Hibernate: getRequestByApplicationId");
+
         try (Session session = sessionFactory.openSession()) {
             ApplicationHibernate application = session.get(ApplicationHibernate.class, applicationId);
             if (application != null) {
@@ -118,7 +123,6 @@ public class AdminApplicationDaoHibernateImpl implements AdminApplicationDao {
 
     @Override
     public void addStudentToClassByApplicationId(Integer applicationId) {
-        System.out.println("88888 Hibernate: addStudentToClassByApplicationId");
 
         try (Session session = sessionFactory.openSession()) {
             ApplicationHibernate application = session.get(ApplicationHibernate.class, applicationId);

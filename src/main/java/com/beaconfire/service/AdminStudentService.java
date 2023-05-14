@@ -41,8 +41,8 @@ public class AdminStudentService {
        return adminHomeDisplay;
     }
 
-    public void flipStudentStatus(int studentId){
-        adminStudentDisplayDao.flipStudentStatus(studentId);
+    public Boolean flipStudentStatus(int studentId, int status){
+        return adminStudentDisplayDao.flipStudentStatus(studentId, status);
     }
 
     public void changeStudentClassStatus(int studentId, int classId, String status) {
@@ -51,5 +51,13 @@ public class AdminStudentService {
 
     public Boolean studentExistsById(Integer studentId){
         return adminStudentDisplayDao.studentExistsById(studentId);
+    }
+
+    public Boolean classExistsById(Integer classId){
+        return adminStudentDisplayDao.classExistsById(classId);
+    }
+
+    public Boolean isStudentEnrolledInClass(Integer studentId, Integer classId){
+        return adminStudentDisplayDao.isStudentEnrolledInClass(studentId, classId);
     }
 }

@@ -6,22 +6,27 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminCourseDisplay {
+public class SingleApplication {
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    Integer course_id;
+    String student;
 
     String course_name;
 
-    String course_code;
+    String semester_name;
 
-    String department_name;
+    String request;
 
-    String school_name;
+    LocalDateTime creation_time;
 
-    String description;
+    String status;
+
+    String feedback;
+
 }

@@ -2,10 +2,8 @@ package com.beaconfire.dao.hibernate;
 
 import com.beaconfire.dao.DAOinterface.StudentApplicationDisplayDao;
 import com.beaconfire.domain.DTO.ClassApplicationResponse;
-import com.beaconfire.domain.hibernate.ApplicationHibernate;
-import com.beaconfire.domain.hibernate.StudentClassHibernate;
-import com.beaconfire.domain.hibernate.StudentHibernate;
-import com.beaconfire.domain.hibernate.WebRegClassHibernate;
+import com.beaconfire.domain.hibernate.*;
+import com.beaconfire.domain.jdbc.SingleApplication;
 import com.beaconfire.domain.jdbc.StudentApplicationDisplay;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -210,6 +208,39 @@ public class StudentApplicationDisplayDaoHibernateImpl implements StudentApplica
 
     }
 
+    @Override
+    public SingleApplication getApplicationById(int id) {
+        SingleApplication result = new SingleApplication();
+        try (Session session = sessionFactory.openSession()) {
+
+            ApplicationHibernate application = session.get(ApplicationHibernate.class, id);
+
+            result.setStudent(application.getStudentHibernate().getFirst_name() + " " + application.getStudentHibernate().getLast_name());
+            result.setFeedback(application.getFeedback());
+            result.setCourse_name(application.getWebRegClassHibernate().getCourseHibernate().getName());
+            result.setRequest(application.getRequest());
+            result.setSemester_name(application.getWebRegClassHibernate().getSemesterHibernate().getName());
+            result.setCreation_time(application.getCreation_time());
+            result.setStatus(application.getStatus());
+
+        }
+        return result;
+    }
+
+    public Boolean applicationExistsById(int id){
+        try (Session session = sessionFactory.openSession()) {
+            ApplicationHibernate hibernate = session.get(ApplicationHibernate.class, id);
+            return hibernate != null;
+        }
+    }
+
+    @Override
+    public Boolean applicationIsPendingById(int applicationId) {
+        try (Session session = sessionFactory.openSession()) {
+            ApplicationHibernate hibernate = session.get(ApplicationHibernate.class, applicationId);
+            return hibernate.getStatus().equals("pending");
+        }
+    }
 
 
 }

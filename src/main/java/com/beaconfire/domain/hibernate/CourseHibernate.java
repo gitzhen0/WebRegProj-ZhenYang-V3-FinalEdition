@@ -25,9 +25,6 @@ public class CourseHibernate {
     @Column(name="code")
     private String code;
 
-//    @Column(name="department_id")
-//    private Integer department_id;
-
     @ManyToOne
     @JoinColumn(name="department_id")
     private DepartmentHibernate departmentHibernate;

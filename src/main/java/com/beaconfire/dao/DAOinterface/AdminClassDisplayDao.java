@@ -9,10 +9,16 @@ public interface AdminClassDisplayDao {
 
     List<AdminClassDisplay> getAllClasses();
 
-    int addNewClass(int course_id, int professor_id, int semester_id, int classroom_id, int capacity, String dayOfWeek, LocalTime startTime, LocalTime endTime);
+    int addNewClass(int course_id, int professor_id, int semester_id, int classroom_id, int capacity, Integer dayOfWeek, LocalTime startTime, LocalTime endTime);
 
-    void flipClassStatus(int classId);
+    void flipClassStatus(int classId, int status);
 
 
+    Boolean courseExistsById(Integer id);
 
+    Boolean semesterExistsById(Integer id);
+
+    Boolean professorExistsById(Integer id);
+
+    Boolean classroomExistsById(Integer id);
 }

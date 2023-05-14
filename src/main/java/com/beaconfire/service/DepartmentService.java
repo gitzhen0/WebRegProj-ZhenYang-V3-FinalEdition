@@ -17,4 +17,8 @@ public class DepartmentService {
     public List<Department> getAllDepartments(){
         return departmentDao.getAllDepartments();
     }
+
+    public Boolean departmentExistsById(Integer id){
+        return departmentDao.departmentExistsById(id);
+    }
 }

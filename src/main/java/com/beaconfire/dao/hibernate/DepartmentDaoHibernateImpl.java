@@ -2,6 +2,7 @@ package com.beaconfire.dao.hibernate;
 
 import com.beaconfire.dao.DAOinterface.DepartmentDao;
 import com.beaconfire.domain.hibernate.DepartmentHibernate;
+import com.beaconfire.domain.hibernate.WebRegClassHibernate;
 import com.beaconfire.domain.jdbc.Department;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -49,4 +50,13 @@ public class DepartmentDaoHibernateImpl implements DepartmentDao {
 
 
     }
+
+    @Override
+    public Boolean departmentExistsById(Integer id) {
+        try (Session session = sessionFactory.openSession()) {
+            DepartmentHibernate departmentHibernate = session.get(DepartmentHibernate.class, id);
+            return departmentHibernate != null;
+        }
+    }
+
 }

@@ -4,6 +4,7 @@ import com.beaconfire.dao.DAOinterface.AdminApplicationDao;
 import com.beaconfire.dao.DAOinterface.StudentApplicationDisplayDao;
 import com.beaconfire.domain.DTO.ClassApplicationResponse;
 import com.beaconfire.domain.jdbc.AdminApplication;
+import com.beaconfire.domain.jdbc.SingleApplication;
 import com.beaconfire.domain.jdbc.StudentApplicationDisplay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,5 +70,17 @@ public class StudentApplicationService {
 
     public String[] validToRemove(int studentId, int applicationId){
         return studentApplicationDao.validToRemove(studentId, applicationId);
+    }
+
+    public SingleApplication getApplicationById(int id){
+        return studentApplicationDao.getApplicationById(id);
+    }
+
+    public Boolean applicationExistsById(int id) {
+        return studentApplicationDao.applicationExistsById(id);
+    }
+
+    public Boolean applicationIsPendingById(int applicationId) {
+        return studentApplicationDao.applicationIsPendingById(applicationId);
     }
 }
