@@ -2,7 +2,6 @@ package com.beaconfire.controller;
 
 import com.beaconfire.domain.DTO.GeneralResponse;
 import com.beaconfire.domain.DTO.SignupRequest;
-import com.beaconfire.domain.jdbc.Department;
 import com.beaconfire.security.JwtUtil;
 import com.beaconfire.service.DepartmentService;
 import com.beaconfire.service.StudentService;
@@ -11,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -29,12 +27,7 @@ public class SignupController {
 
     private final JwtUtil jwtUtil;
 
-    @GetMapping()
-    public String getRegistrationPage(Model model){
-        List<Department> departments = departmentService.getAllDepartments();
-        model.addAttribute("departments", departments);
-        return "signUp";
-    }
+
 
     @PostMapping()
     public ResponseEntity<GeneralResponse> processSignup(@RequestBody SignupRequest sur) {

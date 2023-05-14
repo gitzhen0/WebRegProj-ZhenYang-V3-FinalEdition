@@ -99,4 +99,19 @@ public class StudentClassController {
         return ResponseEntity.ok().body(new GeneralResponse<List<ClassManagementDisplay>>(GeneralResponse.Status.SUCCESS, "FOUND THOSE ACTIVE CLASSES",classManagementDisplays));
     }
 
+    @PostMapping("/{classId}/add")
+    public ResponseEntity<?> studentAddClass(@PathVariable String classId, HttpServletRequest request){
+
+    }
+
+    @PostMapping("/{classId}/drop")
+    public ResponseEntity<?> studentDropClass(@PathVariable String classId, HttpServletRequest request){
+
+    }
+
+    @PostMapping("/{classId}/withdraw")
+    public ResponseEntity<?> studentWithdrawClass(@PathVariable String classId, HttpServletRequest request){
+
+    }
+
 }
