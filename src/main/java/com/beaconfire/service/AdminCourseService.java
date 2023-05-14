@@ -6,6 +6,8 @@ import com.beaconfire.domain.jdbc.AdminCourseDisplay;
 import com.beaconfire.domain.jdbc.AdminProfessor;
 import com.beaconfire.domain.jdbc.AdminSemester;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,11 +20,13 @@ public class AdminCourseService {
     private AdminCourseDisplayDao adminCourseDisplayDao;
 
 
+    @Cacheable(value = "AdminCourseAll")
     public List<AdminCourseDisplay> getAdminCourseDisplays() {
         return adminCourseDisplayDao.getAllCourses();
     }
 
 
+    @CacheEvict(value = "AdminCourseAll", allEntries = true)
     public void addNewCourse(String courseName, String courseCode, int departmentId, String description) {
         adminCourseDisplayDao.addNewCourse(courseName, courseCode, departmentId, description);
     }

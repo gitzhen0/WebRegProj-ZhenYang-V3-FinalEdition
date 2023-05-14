@@ -3,6 +3,7 @@ package com.beaconfire.service;
 import com.beaconfire.dao.DAOinterface.AdminHomeDisplayDao;
 import com.beaconfire.domain.jdbc.AdminHomeDisplay;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -15,6 +16,7 @@ public class AdminHomeService {
     @Autowired
     private AdminHomeDisplayDao adminHomeDisplayDao;
 
+    @Cacheable(value = "AllAdminStudents")
     public List<AdminHomeDisplay> displayAdminHomeStudents(int page, int limit){
         List<AdminHomeDisplay> adminHomeStudents = adminHomeDisplayDao.findPaginated(page, limit);
 

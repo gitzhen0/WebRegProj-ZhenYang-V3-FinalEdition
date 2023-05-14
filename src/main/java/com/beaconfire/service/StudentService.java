@@ -3,6 +3,7 @@ package com.beaconfire.service;
 import com.beaconfire.dao.DAOinterface.StudentDao;
 import com.beaconfire.domain.hibernate.StudentHibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,7 @@ public class StudentService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
 
+    @CacheEvict(value = "AllAdminStudents", allEntries = true)
     public Integer registerStudent(String first_name, String last_name, String email, String password, int department_id, int is_active, int is_admin){
         try {
             password = passwordEncoder.encode(password); // use password encoder here
@@ -32,29 +34,6 @@ public class StudentService implements UserDetailsService {
             return -1;
         }
     }
-
-
-//    public String login(String email, String password, HttpSession session){
-//        Student student = studentDao.getStudentByEmail(email);
-//        System.out.println("password: " + password);
-//        password = PasswordUtils.md5(password);
-//        if (student == null) {
-//            return "login";
-//        }
-//        if (student.getPassword().equals(password)){
-//            session.setAttribute("userId", studentDao.getStudentByEmail(email).getId());
-//            int isAdmin = studentDao.getStudentByEmail(email).getIs_admin();
-//            session.setAttribute("is_admin", String.valueOf(isAdmin));
-//            System.out.println("MY Student ID in Session: " + session.getAttribute("userId"));
-//            System.out.println("isAdmin: "+ isAdmin);
-//            if(isAdmin == 1){
-//                return "redirect:/admin/home";
-//            }else{
-//                return "redirect:/home";
-//            }
-//        }
-//        return "login";
-//    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

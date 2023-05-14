@@ -5,6 +5,7 @@ import com.beaconfire.dao.DAOinterface.StudentClassDisplayDao;
 import com.beaconfire.domain.jdbc.AdminClassToStudentDisplay;
 import com.beaconfire.domain.jdbc.StudentClassDisplay;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -84,6 +85,7 @@ public class StudentClassService {
 
     }
 
+    @CacheEvict(value = "AllAdminWebRegClass", allEntries = true)
     public void addStudentToClass(int studentId, int classId){
         studentClassDao.addStudentToClass(studentId, classId);
     }

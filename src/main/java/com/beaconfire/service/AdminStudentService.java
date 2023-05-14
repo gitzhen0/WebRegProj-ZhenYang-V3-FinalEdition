@@ -4,6 +4,7 @@ import com.beaconfire.dao.DAOinterface.AdminStudentDisplayDao;
 import com.beaconfire.domain.jdbc.AdminHomeDisplay;
 import com.beaconfire.domain.jdbc.StudentClassDisplay;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class AdminStudentService {
     private AdminStudentDisplayDao adminStudentDisplayDao;
 
 
-
+    @CacheEvict(value = "AllAdminStudents", allEntries = true)
     public void UpdateStudentStatus(int studentId, int status) {
         adminStudentDisplayDao.UpdateStudentStatus(studentId, status);
 
@@ -41,10 +42,12 @@ public class AdminStudentService {
        return adminHomeDisplay;
     }
 
+    @CacheEvict(value = "AllAdminStudents", allEntries = true)
     public Boolean flipStudentStatus(int studentId, int status){
         return adminStudentDisplayDao.flipStudentStatus(studentId, status);
     }
 
+    @CacheEvict(value = "AllAdminStudents", allEntries = true)
     public void changeStudentClassStatus(int studentId, int classId, String status) {
         adminStudentDisplayDao.changeStudentClassStatus(studentId, classId, status);
     }
