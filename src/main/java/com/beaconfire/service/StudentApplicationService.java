@@ -2,6 +2,7 @@ package com.beaconfire.service;
 
 import com.beaconfire.dao.AdminApplicationDao;
 import com.beaconfire.dao.StudentApplicationDisplayDao;
+import com.beaconfire.domain.DTO.ClassApplicationResponse;
 import com.beaconfire.domain.jdbc.AdminApplication;
 import com.beaconfire.domain.jdbc.StudentApplicationDisplay;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,8 @@ public class StudentApplicationService {
         return adminApplicationDao.getAllApplications();
     }
 
-    public void addNewApplication(int studentId, int classId, String request) {
-        studentApplicationDao.addNewApplication(studentId, classId, request);
+    public ClassApplicationResponse addNewApplication(int studentId, int classId, String request) {
+        return studentApplicationDao.addNewApplication(studentId, classId, request);
     }
 
     public void removeApplication(int studentId, int classId) {
@@ -61,5 +62,9 @@ public class StudentApplicationService {
 
     public void removeStudentFromClass(int studentId, int classId) {
         studentApplicationDao.removeStudentFromClass(studentId, classId);
+    }
+
+    public boolean applicationExists(int studentId, int classId, String request){
+        return studentApplicationDao.applicationExists(studentId, classId, request);
     }
 }

@@ -1,6 +1,7 @@
 package com.beaconfire.controller;
 
 import com.beaconfire.Utils.DayOfWeekUtils;
+import com.beaconfire.domain.DTO.ClassApplicationResponse;
 import com.beaconfire.domain.DTO.GeneralResponse;
 import com.beaconfire.domain.DTO.StudentGetClassResponse;
 import com.beaconfire.domain.jdbc.*;
@@ -101,16 +102,55 @@ public class StudentClassController {
 
     @PostMapping("/{classId}/add")
     public ResponseEntity<?> studentAddClass(@PathVariable String classId, HttpServletRequest request){
+        int studentId = jwtUtil.extractId(request.getHeader("Authorization").substring(7));
+        String[] conditions = studentClassService.applicationCheck(studentId, Integer.parseInt(classId));
+        String joined = String.join(" - ", conditions);
 
+        if(conditions[0].equals("")){//student haven't enrolled
+            if((conditions[1] + conditions[2] + conditions[3] + conditions[4] + conditions[6]).equals("")){
+                if(conditions[5].equals("")){ // perfectly met condition
+                    studentClassService.addStudentToClass(studentId, Integer.parseInt(classId));
+                    return ResponseEntity.ok().body(new GeneralResponse<String>(GeneralResponse.Status.SUCCESS, "Perfectly met all conditions, class is added", ""));
+                }else{//all good, but class is full
+                    if(studentApplicationService.applicationExists(studentId, Integer.parseInt(classId), "add")){
+                        return ResponseEntity.badRequest().body(new GeneralResponse<String>(GeneralResponse.Status.FAILED,"duplicated request", "you have another add request for this course in our record"));
+                    }
+                    ClassApplicationResponse result = studentApplicationService.addNewApplication(studentId, Integer.parseInt(classId), "add");
+                    return ResponseEntity.ok().body(new GeneralResponse<ClassApplicationResponse>(GeneralResponse.Status.SUCCESS, "class is full, but request is submitted", result));
+                }
+            }
+        }
+        return ResponseEntity.badRequest().body(new GeneralResponse<String>(GeneralResponse.Status.FAILED, joined, ""));
     }
 
     @PostMapping("/{classId}/drop")
-    public ResponseEntity<?> studentDropClass(@PathVariable String classId, HttpServletRequest request){
+    public ResponseEntity<?> studentDropClass(@PathVariable String classId, HttpServletRequest request) {
+        int studentId = jwtUtil.extractId(request.getHeader("Authorization").substring(7));
+        String[] conditions = studentClassService.applicationCheck(studentId, Integer.parseInt(classId));
+        String joined = String.join(" - ", conditions);
 
+        if (conditions[7].equals("") && !conditions[0].equals("")) {// enrolled within two weeks
+            studentApplicationService.removeStudentFromClass(studentId, Integer.parseInt(classId));
+            return ResponseEntity.ok().body(new GeneralResponse<String>(GeneralResponse.Status.SUCCESS, "Condition all met, drop is success", ""));
+        } else {
+            return ResponseEntity.badRequest().body(new GeneralResponse<String>(GeneralResponse.Status.FAILED, "DROP is failed", joined));
+        }
     }
 
     @PostMapping("/{classId}/withdraw")
     public ResponseEntity<?> studentWithdrawClass(@PathVariable String classId, HttpServletRequest request){
+
+        int studentId = jwtUtil.extractId(request.getHeader("Authorization").substring(7));
+        String[] conditions = studentClassService.applicationCheck(studentId, Integer.parseInt(classId));
+        String joined = String.join(" - ", conditions);
+
+        if(!conditions[7].equals("") && !conditions[0].equals("")) {
+            //all condition is met for withdraw
+            ClassApplicationResponse result = studentApplicationService.addNewApplication(studentId, Integer.parseInt(classId), "withdraw");
+            return ResponseEntity.ok().body(new GeneralResponse<ClassApplicationResponse>(GeneralResponse.Status.SUCCESS, "withdraw success", result));
+        }else{
+            return ResponseEntity.badRequest().body(new GeneralResponse<String>(GeneralResponse.Status.FAILED, "withdraw failed", joined));
+        }
 
     }
 

@@ -1,6 +1,7 @@
 package com.beaconfire.dao.hibernate;
 
 import com.beaconfire.dao.StudentApplicationDisplayDao;
+import com.beaconfire.domain.DTO.ClassApplicationResponse;
 import com.beaconfire.domain.hibernate.ApplicationHibernate;
 import com.beaconfire.domain.hibernate.StudentClassHibernate;
 import com.beaconfire.domain.hibernate.StudentHibernate;
@@ -64,22 +65,34 @@ public class StudentApplicationDisplayDaoHibernateImpl implements StudentApplica
     }
 
     @Override
-    public void addNewApplication(int studentId, int classId, String request) {
+    public ClassApplicationResponse addNewApplication(int studentId, int classId, String request) {
+        ClassApplicationResponse car = new ClassApplicationResponse();
         try (Session session = sessionFactory.openSession()) {
             StudentHibernate student = session.get(StudentHibernate.class, studentId);
             WebRegClassHibernate webRegClass = session.get(WebRegClassHibernate.class, classId);
+
+            LocalDateTime now = LocalDateTime.now();
 
             ApplicationHibernate newApplication = new ApplicationHibernate();
             newApplication.setStudentHibernate(student);
             newApplication.setWebRegClassHibernate(webRegClass);
             newApplication.setRequest(request);
             newApplication.setStatus("pending");
-            newApplication.setCreation_time(LocalDateTime.now());
+            newApplication.setCreation_time(now);
 
             session.beginTransaction();
             session.save(newApplication);
             session.getTransaction().commit();
+
+            car.setCourseName(webRegClass.getCourseHibernate().getName());
+            car.setCourseCode(webRegClass.getCourseHibernate().getCode());
+            car.setCreationTime(now);
+            car.setSemester(webRegClass.getSemesterHibernate().getName());
+            car.setRequest(request);
+            car.setStatus("pending");
+
         }
+        return car;
     }
 
     @Override
@@ -142,4 +155,29 @@ public class StudentApplicationDisplayDaoHibernateImpl implements StudentApplica
             session.getTransaction().commit();
         }
     }
+
+    @Override
+    public boolean applicationExists(int studentId, int classId, String request) {
+        try (Session session = sessionFactory.openSession()) {
+            // Create a query to find the ApplicationHibernate instance by studentId, classId and action
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<ApplicationHibernate> cq = cb.createQuery(ApplicationHibernate.class);
+            Root<ApplicationHibernate> applicationRoot = cq.from(ApplicationHibernate.class);
+            cq.where(
+                    cb.and(
+                            cb.equal(applicationRoot.get("studentHibernate").get("id"), studentId),
+                            cb.equal(applicationRoot.get("webRegClassHibernate").get("id"), classId),
+                            cb.equal(applicationRoot.get("action"), request)
+                    )
+            );
+
+            // Execute the query to get the instance
+            TypedQuery<ApplicationHibernate> query = session.createQuery(cq);
+            ApplicationHibernate application = query.getResultStream().findFirst().orElse(null);
+
+            // Return whether the application exists
+            return application != null;
+        }
+    }
+
 }

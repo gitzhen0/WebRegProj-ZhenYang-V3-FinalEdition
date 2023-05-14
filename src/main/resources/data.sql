@@ -77,7 +77,7 @@ VALUES ('2023-01-23', '2023-05-19', '2023 SPRING'),
        ('2019-08-26', '2019-12-13', '2019 FALL'),
        ('2019-01-28', '2019-05-24', '2019 SPRING'),
        ('2018-08-27', '2018-12-14', '2018 FALL'),
-       ('2023-04-24', '2023-7-14', 'In2WeeKs');
+       ('2023-05-11', '2023-7-14', 'In2WeeKs');
 
 -- Insert fake data into Professor
 INSERT INTO Professor (first_name, last_name, email, department_id)
