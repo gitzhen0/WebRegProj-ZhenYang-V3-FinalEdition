@@ -143,4 +143,12 @@ public class AdminStudentDisplayDaoHibernateImpl implements AdminStudentDisplayD
         }
     }
 
+    @Override
+    public Boolean studentExistsById(Integer studentId) {
+        try (Session session = sessionFactory.openSession()) {
+            StudentHibernate student = session.get(StudentHibernate.class, studentId);
+            return student != null;
+        }
+    }
+
 }

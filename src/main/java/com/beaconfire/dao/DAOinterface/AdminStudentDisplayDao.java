@@ -16,4 +16,6 @@ public interface AdminStudentDisplayDao {
     void flipStudentStatus(int studentId);
 
     void changeStudentClassStatus(int studentId, int classId, String status);
+
+    Boolean studentExistsById(Integer studentId);
 }

@@ -48,4 +48,8 @@ public class AdminStudentService {
     public void changeStudentClassStatus(int studentId, int classId, String status) {
         adminStudentDisplayDao.changeStudentClassStatus(studentId, classId, status);
     }
+
+    public Boolean studentExistsById(Integer studentId){
+        return adminStudentDisplayDao.studentExistsById(studentId);
+    }
 }
