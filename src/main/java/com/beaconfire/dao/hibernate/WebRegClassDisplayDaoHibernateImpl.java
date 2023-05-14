@@ -1,6 +1,7 @@
 package com.beaconfire.dao.hibernate;
 
 import com.beaconfire.dao.DAOinterface.WebRegClassDisplayDao;
+import com.beaconfire.domain.hibernate.DepartmentHibernate;
 import com.beaconfire.domain.hibernate.WebRegClassHibernate;
 import com.beaconfire.domain.jdbc.WebRegClassDisplay;
 import org.hibernate.Session;
@@ -54,6 +55,14 @@ public class WebRegClassDisplayDaoHibernateImpl implements WebRegClassDisplayDao
                     .build();
 
             return result;
+        }
+    }
+
+    @Override
+    public Boolean classExistsById(Integer classId) {
+        try (Session session = sessionFactory.openSession()) {
+            WebRegClassHibernate webRegClassHibernate = session.get(WebRegClassHibernate.class, classId);
+            return webRegClassHibernate != null;
         }
     }
 }

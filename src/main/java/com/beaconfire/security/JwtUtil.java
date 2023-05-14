@@ -56,7 +56,12 @@ public class JwtUtil {
 
     // check if the token has expired
     private Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+
+        if(tokenNeverExpire){
+            return false;
+        }else{
+            return extractExpiration(token).before(new Date());
+        }
     }
 
     // generate token for user

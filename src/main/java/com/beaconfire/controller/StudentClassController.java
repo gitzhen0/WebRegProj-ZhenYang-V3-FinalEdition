@@ -5,6 +5,7 @@ import com.beaconfire.domain.DTO.ClassApplicationResponse;
 import com.beaconfire.domain.DTO.GeneralResponse;
 import com.beaconfire.domain.DTO.StudentGetClassResponse;
 import com.beaconfire.domain.jdbc.*;
+import com.beaconfire.exception.CustomSomethingNotFoundException;
 import com.beaconfire.security.JwtUtil;
 import com.beaconfire.service.*;
 import lombok.RequiredArgsConstructor;
@@ -49,14 +50,18 @@ public class StudentClassController {
 
 
     @GetMapping("/{class_id}")
-    public ResponseEntity<?> getClassDetailByClassId(@PathVariable("class_id") String classId, HttpServletRequest request){
+    public ResponseEntity<?> getClassDetailByClassId(@PathVariable("class_id") Integer classId, HttpServletRequest request){
 
-        WebRegClassDisplay webRegClassDisplay = webRegClassService.getWebRegClassDisplayByClassId(Integer.parseInt(classId));
-        ClassToSemesterDisplay classToSemesterDisplay = webRegClassService.getClassToSemesterDisplayByClassId(Integer.parseInt(classId));
-        ClassToLectureDisplay classToLectureDisplay = webRegClassService.getClassToLectureDisplayByClassId(Integer.parseInt(classId));
-        ClassToProfessorDisplay classToProfessorDisplay = webRegClassService.getClassToProfessorDisplayByClassId(Integer.parseInt(classId));
-        ClassToClassroomDisplay classToClassroomDisplay = webRegClassService.getClassToClassroomDisplayByClassId(Integer.parseInt(classId));
-        ClassToPrerequisiteDisplay classToPrerequisiteDisplay = webRegClassService.getClassToPrerequisiteDisplayByClassId(Integer.parseInt(classId));
+        if (!webRegClassService.classExistsById(classId)) {
+            throw new CustomSomethingNotFoundException("class with id: " + classId + ", is not found");
+        }
+
+        WebRegClassDisplay webRegClassDisplay = webRegClassService.getWebRegClassDisplayByClassId(classId);
+        ClassToSemesterDisplay classToSemesterDisplay = webRegClassService.getClassToSemesterDisplayByClassId(classId);
+        ClassToLectureDisplay classToLectureDisplay = webRegClassService.getClassToLectureDisplayByClassId(classId);
+        ClassToProfessorDisplay classToProfessorDisplay = webRegClassService.getClassToProfessorDisplayByClassId(classId);
+        ClassToClassroomDisplay classToClassroomDisplay = webRegClassService.getClassToClassroomDisplayByClassId(classId);
+        ClassToPrerequisiteDisplay classToPrerequisiteDisplay = webRegClassService.getClassToPrerequisiteDisplayByClassId(classId);
 
         if(Integer.parseInt(webRegClassDisplay.getIs_active()) > 0){
             webRegClassDisplay.setIs_active("Active");
@@ -66,7 +71,7 @@ public class StudentClassController {
 
         classToLectureDisplay.setDay_of_the_week(DayOfWeekUtils.getDayOfWeek(classToLectureDisplay.getDay_of_the_week()));
 
-        List<AdminClassToStudentDisplay> studentClassDisplays = studentClassService.getStudentsByClassId(Integer.parseInt(classId));
+        List<AdminClassToStudentDisplay> studentClassDisplays = studentClassService.getStudentsByClassId(classId);
 
         StudentGetClassResponse studentGetClassResponse = StudentGetClassResponse.builder()
                 .webRegClass(webRegClassDisplay)

@@ -58,4 +58,7 @@ public class WebRegClassService {
     }
 
 
+    public Boolean classExistsById(Integer classId) {
+        return webRegClassDisplayDao.classExistsById(classId);
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Controller
@@ -33,6 +34,10 @@ public class StudentHomeController {
             @PathVariable("page") int page,
             @PathVariable("limit") int limit,
             HttpServletRequest request) {
+
+        if(page<=0 || limit<=0){
+            throw new NumberFormatException("page and limit must be greater than 0");
+        }
 
         int id = jwtUtil.extractId(request.getHeader("Authorization").substring(7));
         List<StudentClassDisplay> studentClassDisplays = studentClassService.displayStudentClass(page, limit, id);
