@@ -1,11 +1,9 @@
 package com.beaconfire.dao.hibernate;
 
-import com.beaconfire.dao.AdminStudentDisplayDao;
-import com.beaconfire.domain.hibernate.CourseHibernate;
+import com.beaconfire.dao.DAOinterface.AdminStudentDisplayDao;
 import com.beaconfire.domain.hibernate.StudentClassHibernate;
 import com.beaconfire.domain.hibernate.StudentHibernate;
 import com.beaconfire.domain.jdbc.AdminHomeDisplay;
-import com.beaconfire.domain.jdbc.Student;
 import com.beaconfire.domain.jdbc.StudentClassDisplay;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

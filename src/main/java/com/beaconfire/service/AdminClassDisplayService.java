@@ -1,10 +1,8 @@
 package com.beaconfire.service;
 
-import com.beaconfire.dao.AdminClassDisplayDao;
-import com.beaconfire.dao.hibernate.AdminClassDisplayDaoHibernateImpl;
+import com.beaconfire.dao.DAOinterface.AdminClassDisplayDao;
 import com.beaconfire.domain.jdbc.AdminClassDisplay;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;

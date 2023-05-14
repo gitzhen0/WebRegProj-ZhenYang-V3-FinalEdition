@@ -1,10 +1,8 @@
 package com.beaconfire.service;
 
-import com.beaconfire.dao.*;
-import com.beaconfire.dao.hibernate.*;
+import com.beaconfire.dao.DAOinterface.*;
 import com.beaconfire.domain.jdbc.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service

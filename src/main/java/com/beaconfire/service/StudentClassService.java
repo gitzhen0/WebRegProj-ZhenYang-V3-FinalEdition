@@ -1,16 +1,12 @@
 package com.beaconfire.service;
 
-import com.beaconfire.dao.StudentClassDao;
-import com.beaconfire.dao.StudentClassDisplayDao;
-import com.beaconfire.dao.hibernate.StudentClassDisplayDaoHibernateImpl;
+import com.beaconfire.dao.DAOinterface.StudentClassDao;
+import com.beaconfire.dao.DAOinterface.StudentClassDisplayDao;
 import com.beaconfire.domain.jdbc.AdminClassToStudentDisplay;
 import com.beaconfire.domain.jdbc.StudentClassDisplay;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Service

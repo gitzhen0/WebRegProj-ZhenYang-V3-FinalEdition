@@ -1,6 +1,6 @@
 package com.beaconfire.dao.hibernate;
 
-import com.beaconfire.dao.StudentClassDao;
+import com.beaconfire.dao.DAOinterface.StudentClassDao;
 import com.beaconfire.domain.hibernate.*;
 import com.beaconfire.domain.jdbc.StudentClass;
 import org.hibernate.Session;
@@ -16,7 +16,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;

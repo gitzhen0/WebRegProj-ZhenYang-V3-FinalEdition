@@ -1,6 +1,6 @@
 package com.beaconfire.dao.hibernate;
 
-import com.beaconfire.dao.ClassToPrerequisiteDisplayDao;
+import com.beaconfire.dao.DAOinterface.ClassToPrerequisiteDisplayDao;
 import com.beaconfire.domain.hibernate.CourseHibernate;
 import com.beaconfire.domain.hibernate.PrerequisiteHibernate;
 import com.beaconfire.domain.hibernate.WebRegClassHibernate;

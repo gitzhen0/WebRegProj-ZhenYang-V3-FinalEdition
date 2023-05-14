@@ -1,5 +1,6 @@
 package com.beaconfire.domain.jdbc;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +13,15 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentApplicationDisplay {
-    int application_id;
 
-    int student_id;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    Integer application_id;
 
-    int class_id;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    Integer student_id;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    Integer class_id;
 
     String course_name;
 

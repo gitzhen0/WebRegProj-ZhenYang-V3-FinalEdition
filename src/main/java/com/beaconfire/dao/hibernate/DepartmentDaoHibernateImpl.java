@@ -1,6 +1,6 @@
 package com.beaconfire.dao.hibernate;
 
-import com.beaconfire.dao.DepartmentDao;
+import com.beaconfire.dao.DAOinterface.DepartmentDao;
 import com.beaconfire.domain.hibernate.DepartmentHibernate;
 import com.beaconfire.domain.jdbc.Department;
 import org.hibernate.Session;

@@ -1,12 +1,8 @@
 package com.beaconfire.service;
 
-import com.beaconfire.Utils.PasswordUtils;
-import com.beaconfire.dao.StudentDao;
-import com.beaconfire.domain.DTO.SignupResponse;
+import com.beaconfire.dao.DAOinterface.StudentDao;
 import com.beaconfire.domain.hibernate.StudentHibernate;
-import com.beaconfire.domain.jdbc.Student;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,8 +10,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpSession;
 
 @Service
 public class StudentService implements UserDetailsService {

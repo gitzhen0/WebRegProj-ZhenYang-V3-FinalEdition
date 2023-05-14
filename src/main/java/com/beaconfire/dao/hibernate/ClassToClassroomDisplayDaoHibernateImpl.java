@@ -1,10 +1,9 @@
 package com.beaconfire.dao.hibernate;
 
-import com.beaconfire.dao.ClassToClassroomDisplayDao;
+import com.beaconfire.dao.DAOinterface.ClassToClassroomDisplayDao;
 import com.beaconfire.domain.hibernate.ClassroomHibernate;
 import com.beaconfire.domain.hibernate.WebRegClassHibernate;
 import com.beaconfire.domain.jdbc.ClassToClassroomDisplay;
-import com.beaconfire.domain.jdbc.WebRegClassDisplay;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;

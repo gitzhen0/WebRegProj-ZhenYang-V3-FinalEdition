@@ -1,17 +1,23 @@
 package com.beaconfire.controller;
 
+import com.beaconfire.domain.DTO.GeneralResponse;
+import com.beaconfire.domain.jdbc.AdminHomeDisplay;
 import com.beaconfire.service.AdminHomeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
-@RequestMapping("/admin/home")
+@RequestMapping("/admin")
 public class AdminHomeController {
 
     @Autowired
@@ -21,17 +27,15 @@ public class AdminHomeController {
         this.adminHomeService = adminHomeService;
     }
 
-    @GetMapping()
-    public String getAdminHome(
-            @RequestParam(required = false, defaultValue = "1") int page,
-            @RequestParam(required = false, defaultValue = "4") int limit,
-            HttpSession session,
-            Model model) {
-        if (session.getAttribute("userId") == null || !session.getAttribute("is_admin").equals("1")) {
-            return "redirect:/login";
-        }
+    @GetMapping("/student/all/{page}/{limit}")
+    public ResponseEntity<?> getAdminHome(
+            @PathVariable("page") int page,
+            @PathVariable("limit") int limit) {
 
-        return adminHomeService.displayAdminHomeStudents(page, limit, model);
+        List<AdminHomeDisplay> result = adminHomeService.displayAdminHomeStudents(page, limit);
+
+
+        return ResponseEntity.ok().body(new GeneralResponse<List<AdminHomeDisplay>>(GeneralResponse.Status.SUCCESS, "find all student success", result));
     }
 
 

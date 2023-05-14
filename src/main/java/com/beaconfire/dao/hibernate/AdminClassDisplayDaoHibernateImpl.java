@@ -1,6 +1,6 @@
 package com.beaconfire.dao.hibernate;
 
-import com.beaconfire.dao.AdminClassDisplayDao;
+import com.beaconfire.dao.DAOinterface.AdminClassDisplayDao;
 import com.beaconfire.domain.hibernate.*;
 import com.beaconfire.domain.jdbc.AdminClassDisplay;
 import org.hibernate.Session;

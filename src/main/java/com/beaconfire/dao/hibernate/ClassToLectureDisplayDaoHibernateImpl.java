@@ -1,6 +1,6 @@
 package com.beaconfire.dao.hibernate;
 
-import com.beaconfire.dao.ClassToLectureDisplayDao;
+import com.beaconfire.dao.DAOinterface.ClassToLectureDisplayDao;
 import com.beaconfire.domain.hibernate.LectureHibernate;
 import com.beaconfire.domain.jdbc.ClassToLectureDisplay;
 import org.hibernate.Session;

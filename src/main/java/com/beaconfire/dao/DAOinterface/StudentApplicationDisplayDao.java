@@ -1,4 +1,4 @@
-package com.beaconfire.dao;
+package com.beaconfire.dao.DAOinterface;
 
 import com.beaconfire.domain.DTO.ClassApplicationResponse;
 import com.beaconfire.domain.jdbc.StudentApplicationDisplay;
@@ -18,5 +18,7 @@ public interface StudentApplicationDisplayDao {
     void removeStudentFromClass(int studentId, int classId);
 
     boolean applicationExists(int studentId, int classId, String request);
+
+    String[] validToRemove(int studentId, int applicationId);
 
 }

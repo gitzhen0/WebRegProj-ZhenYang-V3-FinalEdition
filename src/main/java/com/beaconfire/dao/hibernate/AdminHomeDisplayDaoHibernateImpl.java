@@ -1,7 +1,6 @@
 package com.beaconfire.dao.hibernate;
 
-import com.beaconfire.dao.AdminHomeDisplayDao;
-import com.beaconfire.domain.hibernate.DepartmentHibernate;
+import com.beaconfire.dao.DAOinterface.AdminHomeDisplayDao;
 import com.beaconfire.domain.hibernate.StudentHibernate;
 import com.beaconfire.domain.jdbc.AdminHomeDisplay;
 import org.hibernate.Session;
@@ -11,10 +10,9 @@ import org.springframework.stereotype.Repository;
 
 //import javax.persistence.Query;
 import org.hibernate.query.Query;
-import javax.persistence.TypedQuery;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;

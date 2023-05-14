@@ -1,4 +1,4 @@
-package com.beaconfire.dao;
+package com.beaconfire.dao.DAOinterface;
 
 
 import com.beaconfire.domain.jdbc.ClassManagementDisplay;

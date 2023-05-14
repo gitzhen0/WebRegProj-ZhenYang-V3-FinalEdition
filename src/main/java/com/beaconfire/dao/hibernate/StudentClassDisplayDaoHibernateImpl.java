@@ -1,11 +1,10 @@
 package com.beaconfire.dao.hibernate;
 
-import com.beaconfire.dao.StudentClassDisplayDao;
+import com.beaconfire.dao.DAOinterface.StudentClassDisplayDao;
 import com.beaconfire.domain.hibernate.StudentClassHibernate;
 import com.beaconfire.domain.hibernate.StudentHibernate;
 import com.beaconfire.domain.hibernate.WebRegClassHibernate;
 import com.beaconfire.domain.jdbc.AdminClassToStudentDisplay;
-import com.beaconfire.domain.jdbc.AdminHomeDisplay;
 import com.beaconfire.domain.jdbc.StudentClassDisplay;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -17,7 +16,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 

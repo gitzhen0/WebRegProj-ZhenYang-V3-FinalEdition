@@ -1,5 +1,6 @@
 package com.beaconfire.dao.hibernate;
 
+import com.beaconfire.dao.DAOinterface.WebRegClassDisplayDao;
 import com.beaconfire.domain.hibernate.WebRegClassHibernate;
 import com.beaconfire.domain.jdbc.WebRegClassDisplay;
 import org.hibernate.Session;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository("webRegClassDisplayDaoHibernateImpl")
-public class WebRegClassDisplayDaoHibernateImpl implements com.beaconfire.dao.WebRegClassDisplayDao{
+public class WebRegClassDisplayDaoHibernateImpl implements WebRegClassDisplayDao {
 
     @Autowired
     protected SessionFactory sessionFactory;

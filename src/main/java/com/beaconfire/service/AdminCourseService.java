@@ -1,13 +1,11 @@
 package com.beaconfire.service;
 
-import com.beaconfire.dao.AdminCourseDisplayDao;
-import com.beaconfire.dao.hibernate.AdminCourseDisplayDaoHibernateImpl;
+import com.beaconfire.dao.DAOinterface.AdminCourseDisplayDao;
 import com.beaconfire.domain.jdbc.AdminClassroom;
 import com.beaconfire.domain.jdbc.AdminCourseDisplay;
 import com.beaconfire.domain.jdbc.AdminProfessor;
 import com.beaconfire.domain.jdbc.AdminSemester;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

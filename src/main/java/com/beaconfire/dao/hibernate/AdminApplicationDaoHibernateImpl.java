@@ -1,6 +1,6 @@
 package com.beaconfire.dao.hibernate;
 
-import com.beaconfire.dao.AdminApplicationDao;
+import com.beaconfire.dao.DAOinterface.AdminApplicationDao;
 import com.beaconfire.domain.hibernate.ApplicationHibernate;
 import com.beaconfire.domain.hibernate.StudentClassHibernate;
 import com.beaconfire.domain.hibernate.WebRegClassHibernate;
@@ -9,7 +9,6 @@ import com.beaconfire.domain.jdbc.AdminApplication;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

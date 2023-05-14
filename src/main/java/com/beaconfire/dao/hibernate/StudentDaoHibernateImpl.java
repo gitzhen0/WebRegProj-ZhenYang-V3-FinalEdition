@@ -1,6 +1,6 @@
 package com.beaconfire.dao.hibernate;
 
-import com.beaconfire.dao.StudentDao;
+import com.beaconfire.dao.DAOinterface.StudentDao;
 import com.beaconfire.domain.hibernate.DepartmentHibernate;
 import com.beaconfire.domain.hibernate.StudentHibernate;
 import com.beaconfire.domain.jdbc.Student;

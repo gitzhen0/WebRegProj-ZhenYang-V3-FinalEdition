@@ -1,12 +1,11 @@
 package com.beaconfire.service;
 
-import com.beaconfire.dao.AdminApplicationDao;
-import com.beaconfire.dao.StudentApplicationDisplayDao;
+import com.beaconfire.dao.DAOinterface.AdminApplicationDao;
+import com.beaconfire.dao.DAOinterface.StudentApplicationDisplayDao;
 import com.beaconfire.domain.DTO.ClassApplicationResponse;
 import com.beaconfire.domain.jdbc.AdminApplication;
 import com.beaconfire.domain.jdbc.StudentApplicationDisplay;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -66,5 +65,9 @@ public class StudentApplicationService {
 
     public boolean applicationExists(int studentId, int classId, String request){
         return studentApplicationDao.applicationExists(studentId, classId, request);
+    }
+
+    public String[] validToRemove(int studentId, int applicationId){
+        return studentApplicationDao.validToRemove(studentId, applicationId);
     }
 }

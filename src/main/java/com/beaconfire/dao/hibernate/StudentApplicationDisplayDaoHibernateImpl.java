@@ -1,6 +1,6 @@
 package com.beaconfire.dao.hibernate;
 
-import com.beaconfire.dao.StudentApplicationDisplayDao;
+import com.beaconfire.dao.DAOinterface.StudentApplicationDisplayDao;
 import com.beaconfire.domain.DTO.ClassApplicationResponse;
 import com.beaconfire.domain.hibernate.ApplicationHibernate;
 import com.beaconfire.domain.hibernate.StudentClassHibernate;
@@ -19,7 +19,6 @@ import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -179,5 +178,38 @@ public class StudentApplicationDisplayDaoHibernateImpl implements StudentApplica
             return application != null;
         }
     }
+
+    @Override
+    public String[] validToRemove(int studentId, int applicationId) {
+        try (Session session = sessionFactory.openSession()) {
+            // Load the ApplicationHibernate instance by applicationId
+            ApplicationHibernate application = session.get(ApplicationHibernate.class, applicationId);
+
+            String status = application.getStatus();
+
+            String[] message = new String[3];
+            message[0] = "0 - application is not found";
+            message[1] = "1 - this application doesn't belong to the current student";
+            message[2] = "2 - application status is not pending";
+
+            if(application != null){
+                message[0] = "";
+            }
+
+            if(application.getStudentHibernate().getId() == studentId){
+                message[1] = "";
+            }
+
+            if(status.equals("pending")){
+                message[2] = "";
+            }
+
+
+            return message;
+        }
+
+    }
+
+
 
 }

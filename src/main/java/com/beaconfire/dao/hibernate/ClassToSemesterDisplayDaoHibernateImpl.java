@@ -1,5 +1,6 @@
 package com.beaconfire.dao.hibernate;
 
+import com.beaconfire.dao.DAOinterface.ClassToSemesterDisplayDao;
 import com.beaconfire.domain.hibernate.SemesterHibernate;
 import com.beaconfire.domain.hibernate.WebRegClassHibernate;
 import com.beaconfire.domain.jdbc.ClassToSemesterDisplay;
@@ -9,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository("classToSemesterDisplayDaoHibernateImpl")
-public class ClassToSemesterDisplayDaoHibernateImpl implements com.beaconfire.dao.ClassToSemesterDisplayDao{
+public class ClassToSemesterDisplayDaoHibernateImpl implements ClassToSemesterDisplayDao {
 
     @Autowired
     protected SessionFactory sessionFactory;
