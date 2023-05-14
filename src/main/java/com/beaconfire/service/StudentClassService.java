@@ -26,17 +26,13 @@ public class StudentClassService {
 
 
 
-    public String displayStudentClass(int page, int limit, HttpSession session, Model model){
-        List<StudentClassDisplay> studentClasses = studentClassDisplayDao.findPaginated(page, limit, session);
-        int totalPages = studentClassDisplayDao.getTotalPages(limit, session);
+    public List<StudentClassDisplay> displayStudentClass(int page, int limit, int id){
+        List<StudentClassDisplay> studentClasses = studentClassDisplayDao.findPaginated(page, limit, id);
+        int totalPages = studentClassDisplayDao.getTotalPages(limit, id); // don't really need this field
 
-        model.addAttribute("studentClasses", studentClasses);
 
-        model.addAttribute("page", page);
-        model.addAttribute("limit", limit);
-        model.addAttribute("totalPages", totalPages);
 
-        return "studentHome";
+        return studentClasses;
     }
 
     public List<AdminClassToStudentDisplay> getStudentsByClassId(int classId){

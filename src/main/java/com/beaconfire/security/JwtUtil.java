@@ -39,6 +39,12 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
+    public Integer extractId(String token) {
+        System.out.println("In ExtractID: " + extractClaim(token, claims -> claims.get("id", Integer.class)));
+        return extractClaim(token, claims -> claims.get("id", Integer.class));
+    }
+
+
     private Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }

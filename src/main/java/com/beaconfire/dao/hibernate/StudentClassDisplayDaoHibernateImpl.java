@@ -28,30 +28,20 @@ public class StudentClassDisplayDaoHibernateImpl implements StudentClassDisplayD
     protected SessionFactory sessionFactory;
 
     @Override
-    public List<StudentClassDisplay> findPaginated(int page, int limit, HttpSession httpsession) {
+    public List<StudentClassDisplay> findPaginated(int page, int limit, int id) {
         int offset = (page - 1) * limit;
         try (Session session = sessionFactory.openSession()) {
             CriteriaBuilder cb = session.getCriteriaBuilder();
 
-
-//
-//            // Create a CriteriaQuery for WebRegClassHibernate class
-//            CriteriaQuery<WebRegClassHibernate> cq = cb.createQuery(WebRegClassHibernate.class);
-//            Root<StudentClassHibernate> studentClassRoot = cq.from(StudentClassHibernate.class);
-            // Create a CriteriaQuery for WebRegClassHibernate class
             CriteriaQuery<StudentClassHibernate> cq = cb.createQuery(StudentClassHibernate.class);
             Root<StudentClassHibernate> studentClassRoot = cq.from(StudentClassHibernate.class);
 
             // Set the condition for the studentId
-            cq.where(cb.equal(studentClassRoot.get("studentHibernate").get("id"), httpsession.getAttribute("userId")));
-
+            cq.where(cb.equal(studentClassRoot.get("studentHibernate").get("id"), id));
 
 
             // Create a query, execute it, and return the result
             Query<StudentClassHibernate> query = session.createQuery(cq);
-
-
-
 
             query.setFirstResult(offset);
             query.setMaxResults(limit);
@@ -61,7 +51,7 @@ public class StudentClassDisplayDaoHibernateImpl implements StudentClassDisplayD
 
             for(StudentClassHibernate c: tmpList){
                 StudentClassDisplay tmp = StudentClassDisplay.builder()
-                        .student_id((Integer) httpsession.getAttribute("userId"))
+                        .student_id(id)
                         .class_id(c.getId())
                         .course_name(c.getWebRegClassHibernate().getCourseHibernate().getName())
                         .course_code(c.getWebRegClassHibernate().getCourseHibernate().getCode())
@@ -77,7 +67,7 @@ public class StudentClassDisplayDaoHibernateImpl implements StudentClassDisplayD
     }
 
     @Override
-    public int getTotalPages(int limit, HttpSession httpsession) {
+    public int getTotalPages(int limit, int id) {
         try (Session session = sessionFactory.openSession()) {
             // Get CriteriaBuilder instance from the session
             CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -90,7 +80,7 @@ public class StudentClassDisplayDaoHibernateImpl implements StudentClassDisplayD
             Join<StudentClassHibernate, WebRegClassHibernate> classJoin = studentClassRoot.join("webRegClassHibernate");
 
             // Set the condition for the studentId
-            cq.where(cb.equal(studentClassRoot.get("studentHibernate").get("id"), httpsession.getAttribute("userId")));
+            cq.where(cb.equal(studentClassRoot.get("studentHibernate").get("id"), id));
 
             // Select the count of the WebRegClassHibernate objects
             cq.select(cb.count(classJoin));

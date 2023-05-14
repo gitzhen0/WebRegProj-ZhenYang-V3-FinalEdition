@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface StudentClassDisplayDao {
 
-    List<StudentClassDisplay> findPaginated(int page, int limit, HttpSession session);
+    List<StudentClassDisplay> findPaginated(int page, int limit, int id);
 
-    int getTotalPages(int limit, HttpSession session);
+    int getTotalPages(int limit, int id);
 
     List<AdminClassToStudentDisplay> findStudentsByClassId(int classId);
 }

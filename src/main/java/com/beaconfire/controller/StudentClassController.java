@@ -1,22 +1,36 @@
 package com.beaconfire.controller;
 
-import VO.UserSessionVO;
 import com.beaconfire.Utils.DayOfWeekUtils;
+import com.beaconfire.domain.DTO.GeneralResponse;
+import com.beaconfire.domain.DTO.StudentGetClassResponse;
 import com.beaconfire.domain.jdbc.*;
+import com.beaconfire.security.JwtUtil;
 import com.beaconfire.service.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/class")
+@RequiredArgsConstructor
 public class StudentClassController {
+
+    @Autowired
+    private final StudentService studentService;
 
 
     @Autowired
@@ -31,33 +45,13 @@ public class StudentClassController {
     @Autowired
     private final StudentApplicationService studentApplicationService;
 
-
-    public StudentClassController(StudentClassService studentClassService, WebRegClassService webRegClassService, ClassManagementService classManagementService, StudentApplicationService studentApplicationService) {
-        this.studentClassService = studentClassService;
-        this.webRegClassService = webRegClassService;
-        this.classManagementService = classManagementService;
-        this.studentApplicationService = studentApplicationService;
-    }
-
-    @ModelAttribute("userSessionVO")
-    public UserSessionVO getUserSessionInfo(HttpSession session){
-        if(session.getAttribute("userId") == null){
-            return null;
-        }
-        UserSessionVO userSessionVO = new UserSessionVO();
-        userSessionVO.setUserId((Integer) session.getAttribute("userId"));
-        userSessionVO.setIs_admin(session.getAttribute("is_admin").toString());
-        return userSessionVO;
-    }
-
-
+    @Autowired
+    private final JwtUtil jwtUtil;
 
 
     @GetMapping("/{class_id}")
-    public String getClassDetailByClassId(@PathVariable("class_id") String classId, Model model, HttpSession session){
-        if(session.getAttribute("userId") == null){
-            return "redirect:/login";
-        }
+    public ResponseEntity<?> getClassDetailByClassId(@PathVariable("class_id") String classId, HttpServletRequest request){
+
         WebRegClassDisplay webRegClassDisplay = webRegClassService.getWebRegClassDisplayByClassId(Integer.parseInt(classId));
         ClassToSemesterDisplay classToSemesterDisplay = webRegClassService.getClassToSemesterDisplayByClassId(Integer.parseInt(classId));
         ClassToLectureDisplay classToLectureDisplay = webRegClassService.getClassToLectureDisplayByClassId(Integer.parseInt(classId));
@@ -72,71 +66,37 @@ public class StudentClassController {
         }
 
         classToLectureDisplay.setDay_of_the_week(DayOfWeekUtils.getDayOfWeek(classToLectureDisplay.getDay_of_the_week()));
-        model.addAttribute("webRegClassDisplay", webRegClassDisplay);
-        model.addAttribute("classToSemesterDisplay", classToSemesterDisplay);
-        model.addAttribute("classToLectureDisplay", classToLectureDisplay);
-        model.addAttribute("classToProfessorDisplay", classToProfessorDisplay);
-        model.addAttribute("classToClassroomDisplay", classToClassroomDisplay);
-        model.addAttribute("classToPrerequisiteDisplay", classToPrerequisiteDisplay);
 
-        if(session.getAttribute("is_admin").equals("1")){
-            List<AdminClassToStudentDisplay> studentClassDisplays = studentClassService.getStudentsByClassId(Integer.parseInt(classId));
-            model.addAttribute("studentClassDisplays", studentClassDisplays);
+        List<AdminClassToStudentDisplay> studentClassDisplays = studentClassService.getStudentsByClassId(Integer.parseInt(classId));
+
+        StudentGetClassResponse studentGetClassResponse = StudentGetClassResponse.builder()
+                .webRegClass(webRegClassDisplay)
+                .semester(classToSemesterDisplay)
+                .professor(classToProfessorDisplay)
+                .lecture(classToLectureDisplay)
+                .classroom(classToClassroomDisplay)
+                .prerequisites(classToPrerequisiteDisplay)
+                .students(studentClassDisplays)
+                .build();
+
+        // check if this user have the ADMIN authority
+        String jwt = request.getHeader("Authorization").substring(7);
+        UserDetails userDetails = studentService.loadUserByUsername(jwtUtil.extractUsername(jwt));
+        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+        boolean isAdmin = authorities.contains(new SimpleGrantedAuthority("ADMIN"));
+        if(!isAdmin){
+            studentGetClassResponse.setStudents(null);
         }
 
-
-        return "classDetails";
+        return ResponseEntity.ok().body(new GeneralResponse<StudentGetClassResponse>(GeneralResponse.Status.SUCCESS, "FOUND CLASS SUCCESSFULLY", studentGetClassResponse));
     }
 
     @GetMapping("/all")
-    public String getClassManagementByUserId(Model model, HttpSession session){
-        if(session.getAttribute("userId") == null){
-            return "redirect:/login";
-        }
-        List<ClassManagementDisplay> classManagementDisplays = classManagementService.getClassManagementDisplay((Integer) session.getAttribute("userId"));
-        model.addAttribute("classManagementDisplays", classManagementDisplays);
-        return "studentClassManagement";
+    public ResponseEntity<?> getClassManagementByUserId(HttpServletRequest request){
+
+        int id = jwtUtil.extractId(request.getHeader("Authorization").substring(7));
+        List<ClassManagementDisplay> classManagementDisplays = classManagementService.getClassManagementDisplay(id);
+        return ResponseEntity.ok().body(new GeneralResponse<List<ClassManagementDisplay>>(GeneralResponse.Status.SUCCESS, "FOUND THOSE ACTIVE CLASSES",classManagementDisplays));
     }
-
-    @PostMapping("/{class_id}")
-    public String sentApplication(@PathVariable("class_id") String classId,
-                                  @RequestParam("action") String action,
-                                  HttpSession session, Model model){
-        if(session.getAttribute("userId") == null){
-            return "redirect:/login";
-        }
-        int studentId = (Integer) session.getAttribute("userId");
-
-        String[] conditions = studentClassService.applicationCheck(studentId, Integer.parseInt(classId));
-
-
-        String errorMessage = Arrays.stream(conditions)
-                .filter(s -> !s.isEmpty())
-                .collect(Collectors.joining("<br/>"));
-
-        System.out.println(errorMessage);
-        model.addAttribute("errorMessage", errorMessage);
-
-
-        if(conditions[0].equals("") && "add".equals(action)){//student haven't enrolled
-            if((conditions[1] + conditions[2] + conditions[3] + conditions[4] + conditions[6]).equals("")){
-                if(conditions[5].equals("")){ // perfectly met condition
-                    studentClassService.addStudentToClass(studentId, Integer.parseInt(classId));
-                }else{//all good, but class is full
-                    studentApplicationService.addNewApplication(studentId, Integer.parseInt(classId), "add");
-                }
-            }
-        }else if("withdraw".equals(action)){// student already enrolled
-            if(conditions[7].equals("")){// enrolled within two weeks
-                System.out.println("correct position");
-                studentApplicationService.removeStudentFromClass(studentId, Integer.parseInt(classId));
-
-            }else{// enrolled more than two weeks
-                studentApplicationService.addNewApplication(studentId, Integer.parseInt(classId), "withdraw");
-            }
-        }
-        return getClassManagementByUserId(model, session);
-    }
-
 
 }

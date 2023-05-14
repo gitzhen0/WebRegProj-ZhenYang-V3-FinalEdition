@@ -1,34 +1,52 @@
 package com.beaconfire.controller;
 
 
+import com.beaconfire.domain.DTO.GeneralResponse;
+import com.beaconfire.domain.jdbc.StudentClassDisplay;
+import com.beaconfire.security.JwtUtil;
 import com.beaconfire.service.StudentClassService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
-@RequestMapping("/home")
+@RequestMapping()
+@RequiredArgsConstructor
 public class StudentHomeController {
 
     @Autowired
     private final StudentClassService studentClassService;
 
-    public StudentHomeController(StudentClassService studentClassService) {
-        this.studentClassService = studentClassService;
-    }
+    @Autowired
+    private final JwtUtil jwtUtil;
 
-    @GetMapping()
-    public String getStudentClasses(
-            @RequestParam(required = false, defaultValue = "1") int page,
-            @RequestParam(required = false, defaultValue = "4") int limit,
-            HttpSession session,
-            Model model) {
 
-        return studentClassService.displayStudentClass(page, limit, session, model);
+
+    @GetMapping("/class/all/{page}/{limit}")
+    public ResponseEntity<?> getStudentClasses(
+            @PathVariable("page") int page,
+            @PathVariable("limit") int limit,
+            HttpServletRequest request) {
+
+        int id = jwtUtil.extractId(request.getHeader("Authorization").substring(7));
+        List<StudentClassDisplay> studentClassDisplays = studentClassService.displayStudentClass(page, limit, id);
+
+        studentClassDisplays.stream().forEach(scd -> {
+            scd.setClass_id(null);
+            scd.setStudent_id(null);
+        });
+
+
+        return ResponseEntity.ok().body(new GeneralResponse<List<StudentClassDisplay>>(GeneralResponse.Status.SUCCESS, "success message", studentClassDisplays));
     }
 }
