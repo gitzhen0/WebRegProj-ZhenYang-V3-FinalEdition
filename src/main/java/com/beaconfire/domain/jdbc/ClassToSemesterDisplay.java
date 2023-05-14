@@ -1,5 +1,6 @@
 package com.beaconfire.domain.jdbc;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ClassToSemesterDisplay {
 
-    int class_id;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    Integer class_id;
 
     private LocalDate start_date;
     private LocalDate end_date;

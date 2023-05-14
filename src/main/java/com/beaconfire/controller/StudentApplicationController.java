@@ -51,6 +51,11 @@ public class StudentApplicationController {
 
     @DeleteMapping("/{application_id}")
     public ResponseEntity<?> removeApplication(@PathVariable("application_id") int applicationId, HttpServletRequest request){
+
+        if (!studentApplicationService.applicationExistsById(applicationId)) {
+            return ResponseEntity.badRequest().body(new GeneralResponse<>(GeneralResponse.Status.FAILED, "application id doesn't exists", null));
+        }
+
         int studentId = jwtUtil.extractId(request.getHeader("Authorization").substring(7));
 
         String[] message = studentApplicationService.validToRemove(studentId, applicationId);

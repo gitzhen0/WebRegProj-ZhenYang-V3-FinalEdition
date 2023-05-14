@@ -1,6 +1,7 @@
 package com.beaconfire.domain.jdbc;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WebRegClassDisplay {
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     String class_id;
     String course_name;
 
@@ -23,9 +25,9 @@ public class WebRegClassDisplay {
 
     String course_description;
 
-    int capacity;
+    Integer capacity;
 
-    int enrollment_num;
+    Integer enrollment_num;
 
     String is_active;
 }

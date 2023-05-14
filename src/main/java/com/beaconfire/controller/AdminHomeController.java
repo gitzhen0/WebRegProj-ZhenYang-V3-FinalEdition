@@ -28,6 +28,10 @@ public class AdminHomeController {
             @PathVariable("page") int page,
             @PathVariable("limit") int limit) {
 
+        if(page<=0 || limit<=0){
+            throw new NumberFormatException("page and limit must be greater than 0");
+        }
+
         List<AdminHomeDisplay> result = adminHomeService.displayAdminHomeStudents(page, limit);
 
 

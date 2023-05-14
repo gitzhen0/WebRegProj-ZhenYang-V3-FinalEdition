@@ -63,6 +63,15 @@ public class StudentClassController {
         ClassToClassroomDisplay classToClassroomDisplay = webRegClassService.getClassToClassroomDisplayByClassId(classId);
         ClassToPrerequisiteDisplay classToPrerequisiteDisplay = webRegClassService.getClassToPrerequisiteDisplayByClassId(classId);
 
+        webRegClassDisplay.setClass_id(null);
+        classToSemesterDisplay.setClass_id(null);
+        classToClassroomDisplay.setClass_id(null);
+        classToPrerequisiteDisplay.setClass_id(null);
+        classToPrerequisiteDisplay.setPrerequisite_id(null);
+        classToLectureDisplay.setClass_id(null);
+        classToProfessorDisplay.setFull_name(classToProfessorDisplay.getFirst_name() + " " + classToProfessorDisplay.getLast_name());
+        classToProfessorDisplay.setClass_id(null);
+
         if(Integer.parseInt(webRegClassDisplay.getIs_active()) > 0){
             webRegClassDisplay.setIs_active("Active");
         }else{
@@ -100,11 +109,19 @@ public class StudentClassController {
 
         int id = jwtUtil.extractId(request.getHeader("Authorization").substring(7));
         List<ClassManagementDisplay> classManagementDisplays = classManagementService.getClassManagementDisplay(id);
+        classManagementDisplays.stream().forEach(cmd ->{
+            cmd.setClass_id(null);
+        });
         return ResponseEntity.ok().body(new GeneralResponse<List<ClassManagementDisplay>>(GeneralResponse.Status.SUCCESS, "FOUND THOSE ACTIVE CLASSES",classManagementDisplays));
     }
 
     @PostMapping("/{classId}/add")
     public ResponseEntity<?> studentAddClass(@PathVariable String classId, HttpServletRequest request){
+
+        if (!webRegClassService.classExistsById(Integer.parseInt(classId))) {
+            throw new CustomSomethingNotFoundException("class with id: " + classId + ", is not found");
+        }
+
         int studentId = jwtUtil.extractId(request.getHeader("Authorization").substring(7));
         String[] conditions = studentClassService.applicationCheck(studentId, Integer.parseInt(classId));
         String joined = String.join(" - ", conditions);
@@ -128,6 +145,11 @@ public class StudentClassController {
 
     @PostMapping("/{classId}/drop")
     public ResponseEntity<?> studentDropClass(@PathVariable String classId, HttpServletRequest request) {
+
+        if (!webRegClassService.classExistsById(Integer.parseInt(classId))) {
+            throw new CustomSomethingNotFoundException("class with id: " + classId + ", is not found");
+        }
+
         int studentId = jwtUtil.extractId(request.getHeader("Authorization").substring(7));
         String[] conditions = studentClassService.applicationCheck(studentId, Integer.parseInt(classId));
         String joined = String.join(" - ", conditions);
@@ -142,6 +164,10 @@ public class StudentClassController {
 
     @PostMapping("/{classId}/withdraw")
     public ResponseEntity<?> studentWithdrawClass(@PathVariable String classId, HttpServletRequest request){
+
+        if (!webRegClassService.classExistsById(Integer.parseInt(classId))) {
+            throw new CustomSomethingNotFoundException("class with id: " + classId + ", is not found");
+        }
 
         int studentId = jwtUtil.extractId(request.getHeader("Authorization").substring(7));
         String[] conditions = studentClassService.applicationCheck(studentId, Integer.parseInt(classId));

@@ -1,5 +1,6 @@
 package com.beaconfire.domain.jdbc;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,9 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ClassToPrerequisiteDisplay {
 
-    private int class_id;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private Integer class_id;
 
-    private int prerequisite_id;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private Integer prerequisite_id;
 
     private String prerequisite_name;
 
