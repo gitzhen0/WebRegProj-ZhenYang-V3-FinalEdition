@@ -10,6 +10,8 @@ import com.beaconfire.domain.jdbc.AdminClassDisplay;
 import com.beaconfire.domain.jdbc.WebRegClassDisplay;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -34,14 +36,17 @@ public class AdminClassDisplayService {
     }
 
 
+    @Cacheable(value = "AllAdminWebRegClass")
     public List<AdminClassDisplay> getAdminClassDisplays() {
         return adminClassDisplayDao.getAllClasses();
     }
 
+    @CacheEvict(value = "AllAdminWebRegClass", allEntries = true)
     public int addNewClass(int course_id, int professor_id, int semester_id, int classroom_id, int capacity, Integer dayOfWeek, LocalTime startTime, LocalTime endTime){
         return adminClassDisplayDao.addNewClass(course_id, professor_id, semester_id, classroom_id, capacity, dayOfWeek, startTime, endTime);
     }
 
+    @CacheEvict(value = "AllAdminWebRegClass", allEntries = true)
     public void flipClassStatus(int classId, int status) {
         adminClassDisplayDao.flipClassStatus(classId, status);
     }

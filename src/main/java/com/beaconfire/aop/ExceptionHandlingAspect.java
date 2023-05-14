@@ -16,11 +16,11 @@ import org.springframework.stereotype.Component;
 public class ExceptionHandlingAspect {
 
     @Around("execution(* com.beaconfire.controller.*.*(..))")
-    public ResponseEntity<?> handleCustomGeneralException(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object handleCustomGeneralException(ProceedingJoinPoint joinPoint) throws Throwable {
 
         try {
             //is essentially invoking the method that the @Around advice is applied to
-            return (ResponseEntity<?>) joinPoint.proceed();
+            return joinPoint.proceed();
         } catch (CustomGeneralException ex) {
             System.out.println("ExceptionHandlingAspect Caught: " +ex.getClass());
             return ResponseEntity.badRequest().body(new GeneralResponse<>(GeneralResponse.Status.FAILED, "Caught CustomGeneralException", ex.getMessage()));
