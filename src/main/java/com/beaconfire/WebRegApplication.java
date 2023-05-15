@@ -26,7 +26,6 @@ public class WebRegApplication {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-//        BCryptPasswordEncoder tmp = new BCryptPasswordEncoder();
         return new BCryptPasswordEncoder();
     }
 }
