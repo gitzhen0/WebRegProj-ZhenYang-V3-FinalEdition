@@ -40,4 +40,13 @@ jwt:
 token:
   neverExpire: true
   # set to false, token will expire in 10 hours
+springdoc:
+  show-login-endpoint: true
+  show-actuator: true
 
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
