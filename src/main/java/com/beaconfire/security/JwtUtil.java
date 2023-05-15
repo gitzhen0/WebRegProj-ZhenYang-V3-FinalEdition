@@ -69,6 +69,9 @@ public class JwtUtil {
         Map<String, Object> claims = new HashMap<>();
         StudentHibernate student = studentService.getStudentByEmail2(userDetails.getUsername());
 //        claims.put("is_admin", student.getIs_admin()); don't need to put is_admin field in jwt token
+        System.out.println(student.toString());
+        System.out.println("In generatetoken: " + student.getPassword());
+        System.out.println("In generatetoken: " + student.getEmail());
         claims.put("id", student.getId());
         return createToken(claims, userDetails.getUsername());
     }

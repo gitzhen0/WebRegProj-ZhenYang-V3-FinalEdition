@@ -16,6 +16,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/application")
+
 public class AdminApplicationController {
 
     @Autowired

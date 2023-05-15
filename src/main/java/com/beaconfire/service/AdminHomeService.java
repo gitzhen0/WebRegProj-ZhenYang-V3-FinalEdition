@@ -2,6 +2,7 @@ package com.beaconfire.service;
 
 import com.beaconfire.dao.DAOinterface.AdminHomeDisplayDao;
 import com.beaconfire.domain.jdbc.AdminHomeDisplay;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -11,10 +12,11 @@ import java.util.List;
 
 
 @Service
+@RequiredArgsConstructor
 public class AdminHomeService {
 
     @Autowired
-    private AdminHomeDisplayDao adminHomeDisplayDao;
+    private final AdminHomeDisplayDao adminHomeDisplayDao;
 
     @Cacheable(value = "AllAdminStudents")
     public List<AdminHomeDisplay> displayAdminHomeStudents(int page, int limit){

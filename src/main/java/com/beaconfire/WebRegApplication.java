@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @EnableWebMvc
 @SpringBootApplication
-@EnableCaching
+@EnableCaching(proxyTargetClass = true)
 public class WebRegApplication {
     public static void main(String[] args) {
         org.springframework.boot.SpringApplication.run(WebRegApplication.class, args);
